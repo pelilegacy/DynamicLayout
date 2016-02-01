@@ -48,7 +48,7 @@
 	    var channel = "pelilegacy_fi";
 
 	    /* Getting URL variables */
-		var params = getUrlVars();
+		var params = getUrlVars(document.location.search);
 
 	    /* Getting player name from URL variable 'p' */
 		/** TODO: Store JSON data file in a HTTP(S) location, so you can debug with Chrome Dev Tools locally?
@@ -57,15 +57,18 @@
 		 */
 
 	    $.getJSON("data.json", function(json) {
-	        $.each(json.players, function(i, v) {
 
-				if (v.first.trim().toLowerCase() === params.player) {
-					var name = v.first + " " + v.last;
-					$("#name").html(name);
-	            }
+			$.each(json.players, function(key, value) {
 
-				return false;
+				var name = "";
+
+				if (value.first.trim().toLowerCase() === params.player) {
+					name = value.first + " " + value.last;
+					$("#name").text(name);
+					return false;
+				}
 	        });
+			return false;
 	    });
 
 	    /* This function will be repeated to request game name from Twitch API */
@@ -86,18 +89,24 @@
 	    }
 
 	    /* Function to read URL variables (?chicken=big etc.)  */
-	    function getUrlVars() {
-	        var vars = {};
-	        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
-				function(m, key, value) { vars[key] = value; });
+	    function getUrlVars(qs) {
 
-			return vars;
+			qs = qs.split('+').join(' ');
+			var params = {},
+				tokens,
+				re 	   = /[?&]?([^=]+)=([^&]*)/g;
+
+			while (tokens = re.exec(qs)) {
+				params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+			}
+
+			return params;
 	    }
 
 	    /* Set scale-value from 0.0 to 1.0. This is here for previewing with browser */
 		// TODO: Do not use document.write but jQuery CSS calls
 
-	    if (params.scale !== "") document.write("<style>html {zoom: " + params.scale + "; -moz-transform: scale(" + params.scale + "); -webkit-transform: scale(" + params.scale + "); transform: scale(" + params.scale + ");}</style>");
+	    if (params.scale != "") document.write("<style>html {zoom: " + params.scale + "; -moz-transform: scale(" + params.scale + "); -webkit-transform: scale(" + params.scale + "); transform: scale(" + params.scale + ");}</style>");
 
 	    /* This changes background-image for 4:3 aspect ratio games */
 	    if (params.aspect === "retro") document.write("<style>body {background-image: url('pelilegacy-layout-2015-kesa-43.png');}</style>");
