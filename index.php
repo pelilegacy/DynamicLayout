@@ -3,7 +3,7 @@
 <head>
 	<title>Layout</title>
 	<meta charset="utf-8">
-    <script src="./jquery.jss"></script>
+    <script src="./jquery.js"></script>
     <style>
 
     @font-face {
@@ -44,9 +44,26 @@
 <div id="name"></div>
 <script>
 
+    /* Set Twitch channel name here */
     var channel = "pelilegacy_fi";
 
-    function repeat(){
+    /* Getting URL variables */
+    var scale = getUrlVars().scale;
+    var aspectratio = getUrlVars().aspect;
+    var player = getUrlVars().player;
+
+    /* Getting player name from URL variable 'p' */
+    $.getJSON("data.json", function(json) {
+        $.each(json.players, function(i, v) {
+            if (v.first.toLowerCase() == player) {
+                document.getElementById('name').innerHTML = v.first + " " + v.last;
+                return;
+            }
+        });
+    });
+
+    /* This function will be repeated to request game name from Twitch API */
+    function repeat() {
         var xmlhttp = new XMLHttpRequest(),
         url = 'https://api.twitch.tv/kraken/channels/' + channel;
         xmlhttp.onreadystatechange = function() {
@@ -60,24 +77,23 @@
         xmlhttp.send();
     }
 
+    /* Function to read URL variables (?chicken=big etc.)  */
     function getUrlVars() {
         var vars = {};
         var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {vars[key] = value;});
         return vars;
     }
 
-    var scale = getUrlVars().s;
-    var aspectratio = getUrlVars().a;
-    var player = getUrlVars().p;
-
+    /* Set scale-value from 0.0 to 1.0. This is here for previewin with browser */
     if(scale != "") document.write("<style>html {zoom: " + scale + "; -moz-transform: scale(" + scale + "); -webkit-transform: scale(" + scale + "); transform: scale(" + scale + ");}</style>");
-    if(aspectratio == "43") document.write("<style>body {background-image: url('pelilegacy-layout-2015-kesa-43.png');}</style>");
-    if(player == "joni") document.getElementById('name').innerHTML = "Joni Nieminen";
-    else if(player == "jonni") document.getElementById('name').innerHTML = "Jonni Estola";
-    else if(player == "niko") document.getElementById('name').innerHTML = "Niko Heikkilä";
-    else if(player == "erno") document.getElementById('name').innerHTML = "Erno Koivistoinen";
+    
+    /* This changes background-image for 4:3 aspect ratio games */    
+    if(aspectratio == "retro") document.write("<style>body {background-image: url('pelilegacy-layout-2015-kesa-43.png');}</style>");
 
+    /* Executing function first since below it executes after timeout */
     repeat();
+
+    /* This sets the function that will be repeated and how often */
     var myVar=setInterval(function(){repeat()},10000);
 
 </script>

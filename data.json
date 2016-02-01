@@ -1,0 +1,23 @@
+{
+  "players": {
+    "joni": {
+      "first": "Joni",
+      "last": "Nieminen"
+    },
+
+    "jonni": {
+      "first": "Jonni",
+      "last": "Estola"
+    },
+
+    "niko": {
+      "first": "Niko",
+      "last": "Heikkilä"
+    },
+
+    "erno": {
+      "first": "Erno",
+      "last": "Koivistoinen"
+    }
+  }
+}
