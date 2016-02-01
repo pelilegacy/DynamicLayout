@@ -7,8 +7,8 @@
     <style>
 
     @font-face {
-        font-family: BebasNeue;
-        src: url("BebasNeue.otf");
+        font-family: ChunkFive;
+        src: url("ChunkFive.otf");
     }
 
     body {
@@ -18,7 +18,7 @@
 
     #game, #name {
         display: block;
-        font-family: BebasNeue;
+        font-family: ChunkFive;
         text-align: center;
         color: white;
         font-size: 36px;
