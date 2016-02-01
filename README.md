@@ -7,4 +7,4 @@ Web-based layout for OBS Multiplatform (Browser-plugin required).
 Check [here](https://github.com/jp9000/obs-studio/releases) for the latest release of OBS Multiplatform.
 
 ## How to use:
-<iframe width="560" height="315" src="https://www.youtube.com/embed/9qnNIZWBYdg" frameborder="0" allowfullscreen></iframe>
+[![Tutorial video](http://img.youtube.com/vi/9qnNIZWBYdg/0.jpg)](https://www.youtube.com/watch?v=9qnNIZWBYdg)
