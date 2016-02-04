@@ -37,15 +37,22 @@
 	        top: 14px;
 	        left: 400px;
 	    }
+
+        #alert {
+	        width: 439px;
+            height: 701px;
+	        top: 66px;
+	        left: 1481px;
+            border: 0px;
+            position: absolute;
+	    }
     </style>
 </head>
 <body>
 	<div id="game"></div>
 	<div id="name"></div>
+    <div id="alertbox"></div>
 	<script>
-
-	    /* Set Twitch channel name here */
-	    var channel = "pelilegacy_fi";
 
 	    /* Getting URL variables */
 		var params = getUrlVars(document.location.search);
@@ -56,7 +63,14 @@
 			See: https://stackoverflow.com/questions/8449716/cross-origin-requests-are-only-supported-for-http-but-its-not-cross-domain
 		 */
 
-	    $.getJSON("data.json", function(json) {
+	    $.getJSON("config.json", function(json) {
+
+            /* Set Twitch channel name here */
+	        var channel = json.config.channel;
+            var alert = json.config.alert;
+
+            /* Enabling alert */
+            document.getElementById('alertbox').innerHTML = '<iframe id="alert" src="' + alert + '"></iframe>';
 
 			$.each(json.players, function(key, value) {
 
