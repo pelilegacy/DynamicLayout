@@ -63,14 +63,20 @@
 			See: https://stackoverflow.com/questions/8449716/cross-origin-requests-are-only-supported-for-http-but-its-not-cross-domain
 		 */
 
+        var channel = "";
+        var tAlert = "";
+
 	    $.getJSON("config.json", function(json) {
 
             /* Set Twitch channel name here */
-	        var channel = json.config.channel;
-            var alert = json.config.alert;
+	        channel = json.config.channel;
+            tAlert = json.config.alert;
 
             /* Enabling alert */
-            document.getElementById('alertbox').innerHTML = '<iframe id="alert" src="' + alert + '"></iframe>';
+            document.getElementById('alertbox').innerHTML = '<iframe id="alert" src="' + tAlert + '"></iframe>';
+
+            /* Executing function first since below it executes after timeout. This is here because otherwise it executes before channel name has been set */
+	        repeat();
 
 			$.each(json.players, function(key, value) {
 
@@ -124,9 +130,6 @@
 
 	    /* This changes background-image for 4:3 aspect ratio games */
 	    if (params.aspect === "retro") document.write("<style>body {background-image: url('pelilegacy-layout-2015-kesa-43.png');}</style>");
-
-	    /* Executing function first since below it executes after timeout */
-	    repeat();
 
 	    /* This sets the function that will be repeated and how often */
 	    var timer = setInterval(function(){
