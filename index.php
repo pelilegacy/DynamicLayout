@@ -46,12 +46,22 @@
             border: 0px;
             position: absolute;
 	    }
+
+        #art {
+	        width: 194px;
+            height: 662px;
+	        top: 85px;
+	        left: 1706px;
+            border: 0px solid green;
+            position: absolute;
+	    }
     </style>
 </head>
 <body>
 	<div id="game"></div>
 	<div id="name"></div>
     <div id="alertbox"></div>
+    <div id="artbox"></div>
 	<script>
 
 	    /* Getting URL variables */
@@ -69,6 +79,7 @@
 
             /* Set Twitch channel name here */
 	        channel = json.config.channel;
+            apikey = json.config.apikey;
             tAlert = json.config.alert;
 
             /* Enabling alert */
@@ -98,7 +109,12 @@
 	        xmlhttp.onreadystatechange = function() {
 	            if (this.readyState == 4 && this.status == 200) {
 	                var request = JSON.parse(this.responseText);
-	                if(request.game != "") document.getElementById('game').innerHTML = request.game;
+	                if(request.game != "") {
+                        if(request.game != document.getElementById('game').innerHTML) {
+                            document.getElementById('game').innerHTML = request.game;
+                            document.getElementById('artbox').innerHTML = '<iframe id="art" scrolling="no" src="./graphics.php?game=' + request.game + '&apikey=' + apikey + '"></iframe>';
+                        }
+                    }
 	                else document.getElementById('game').innerHTML = "Pelin nimeä ei voi noutaa";
 	            }
 	        };
@@ -128,7 +144,7 @@
 	    if (params.scale != "") document.write("<style>html {zoom: " + params.scale + "; -moz-transform: scale(" + params.scale + "); -webkit-transform: scale(" + params.scale + "); transform: scale(" + params.scale + ");}</style>");
 
 	    /* This changes background-image for 4:3 aspect ratio games */
-	    if (params.aspect === "retro") document.write("<style>body {background-image: url('pelilegacy-layout-2015-kesa-43.png');}</style>");
+	    if (params.aspect === "retro") document.write("<style>body {background-image: url('pelilegacy-layout-2015-kesa-43.png');} #art { left: 1501px; width: 399px; }</style>");
 
 	    /* This sets the function that will be repeated and how often */
 	    var timer = setInterval(function(){
