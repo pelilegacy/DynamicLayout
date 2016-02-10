@@ -7,4 +7,6 @@ Web-based layout for OBS Multiplatform (Browser-plugin required).
 Check [here](https://github.com/jp9000/obs-studio/releases) for the latest release of OBS Multiplatform.
 
 ## How to use:
-[![Tutorial video](http://img.youtube.com/vi/9qnNIZWBYdg/0.jpg)](https://www.youtube.com/watch?v=9qnNIZWBYdg)
+- Add BrowserSource to scene
+- Write url which leads to your server
+- Set width/height to 1920/1080
