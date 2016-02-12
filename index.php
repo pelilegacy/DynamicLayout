@@ -47,7 +47,7 @@
             position: absolute;
 	    }
 
-        #art {
+        #artbox {
 	        width: 194px;
             height: 662px;
 	        top: 85px;
@@ -55,6 +55,15 @@
             border: 0px solid green;
             position: absolute;
 	    }
+
+        #pic {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 99%;
+            border: 2px solid;
+            border-radius: 25px;
+        }
     </style>
 </head>
 <body>
@@ -64,10 +73,10 @@
     <div id="artbox"></div>
 	<script>
 
-	    /* Getting URL variables */
+	    // Getting URL variables
 		var params = getUrlVars(document.location.search);
 
-	    /* Getting player name from URL variable 'p' */
+	    // Getting player name from URL variable 'p'
 		/** TODO: Store JSON data file in a HTTP(S) location, so you can debug with Chrome Dev Tools locally?
 			Example: http://example.com/layout/data/data.json
 			See: https://stackoverflow.com/questions/8449716/cross-origin-requests-are-only-supported-for-http-but-its-not-cross-domain
@@ -77,15 +86,15 @@
 
 	    $.getJSON("config.json", function(json) {
 
-            /* Set Twitch channel name here */
+            // Set Twitch channel name here
 	        channel = json.config.channel;
             apikey = json.config.apikey;
             tAlert = json.config.alert;
 
-            /* Enabling alert */
+            // Enabling alert
             document.getElementById('alertbox').innerHTML = '<iframe id="alert" src="' + tAlert + '"></iframe>';
 
-            /* Executing function first since below it executes after timeout. This is here because otherwise it executes before channel name has been set */
+            // Executing function first since below it executes after timeout. This is here because otherwise it executes before channel name has been set
 	        repeat();
 
 			$.each(json.players, function(key, value) {
@@ -101,29 +110,27 @@
 			return false;
 	    });
 
-	    /* This function will be repeated to request game name from Twitch API */
-		// TODO: Make repeat() work with jQuery calls and $.ajax requests as well!
-	    function repeat() {
-	        var xmlhttp = new XMLHttpRequest(),
-	        url = "https://api.twitch.tv/kraken/channels/" + channel;
-	        xmlhttp.onreadystatechange = function() {
-	            if (this.readyState == 4 && this.status == 200) {
-	                var request = JSON.parse(this.responseText);
-	                if(request.game != "") {
-                        if(request.game != document.getElementById('game').innerHTML) {
-                            document.getElementById('game').innerHTML = request.game;
-                            document.getElementById('artbox').innerHTML = '<iframe id="art" scrolling="no" src="./graphics.php?game=' + request.game + '&apikey=' + apikey + '"></iframe>';
+	    // This function will be repeated to request game name from Twitch API
+        function repeat() {
+            $.getJSON("https://api.twitch.tv/kraken/channels/" + channel + "?callback=?", function(json) {
+                if(json.game != "") {
+                        if(json.game != document.getElementById('game').innerHTML) {
+                            document.getElementById('game').innerHTML = json.game;
+                            getGiantbombApiImage(apikey, json.game);
                         }
                     }
 	                else document.getElementById('game').innerHTML = "Pelin nimeä ei voi noutaa";
-	            }
-	        };
+            });
+        }
 
-	        xmlhttp.open('GET', url, true);
-	        xmlhttp.send();
-	    }
+        // Requesting game data from Giantbomb api with Ajax
+        function getGiantbombApiImage(apikey, game) {
+            $.getJSON('http://www.giantbomb.com/api/games/?api_key=' + apikey + '&format=jsonp' + '&field_list=image&filter=name:' + encodeURI(game) + '&json_callback=?', function(json) {
+                document.getElementById('artbox').innerHTML = '<img id="pic" src="' + json.results[0].image.super_url + '" />';
+            });
+        }
 
-	    /* Function to read URL variables (?chicken=big etc.)  */
+	    // Function to read URL variables (?chicken=big etc.)
 	    function getUrlVars(qs) {
 
 			qs = qs.split('+').join(' ');
@@ -138,15 +145,22 @@
 			return params;
 	    }
 
-	    /* Set scale-value from 0.0 to 1.0. This is here for previewing with browser */
-		// TODO: Do not use document.write but jQuery CSS calls
+	    // Set scale-value from 0.0 to 1.0. This is here for previewing with browser
+	    if (params.scale != "") {
+            $("html").css( "zoom", params.scale);
+            $("html").css( "-moz-transform", "scale(" + params.scale + ")");
+            $("html").css( "-webkit-transform", "scale(" + params.scale + ")");
+            $("html").css( "transform", "scale(" + params.scale + ")");
+        }
 
-	    if (params.scale != "") document.write("<style>html {zoom: " + params.scale + "; -moz-transform: scale(" + params.scale + "); -webkit-transform: scale(" + params.scale + "); transform: scale(" + params.scale + ");}</style>");
+	    // This changes background-image for 4:3 aspect ratio games
+	    if (params.aspect === "retro") {
+            $("body").css("background-image", "url(\'pelilegacy-layout-2015-kesa-43.png\')");
+            $("#artbox").css("left", "1501px");
+            $("#artbox").css("width", "399px");
+        }
 
-	    /* This changes background-image for 4:3 aspect ratio games */
-	    if (params.aspect === "retro") document.write("<style>body {background-image: url('pelilegacy-layout-2015-kesa-43.png');} #art { left: 1501px; width: 399px; }</style>");
-
-	    /* This sets the function that will be repeated and how often */
+	    // This sets the function that will be repeated and how often
 	    var timer = setInterval(function(){
 			repeat();
 		}, 10000);
