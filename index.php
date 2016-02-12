@@ -87,9 +87,9 @@
 	    $.getJSON("config.json", function(json) {
 
             // Set Twitch channel name here
-	        channel = json.config.channel;
-            apikey = json.config.apikey;
-            tAlert = json.config.alert;
+	        channel = json.config.twitchchannel;
+            apikey = json.config.giantbombapikey;
+            tAlert = json.config.twitchalerts;
 
             // Enabling alert
             document.getElementById('alertbox').innerHTML = '<iframe id="alert" src="' + tAlert + '"></iframe>';

@@ -1,0 +1,18 @@
+{
+  "players": {
+    "man": {
+      "first": "Angel",
+      "last": "Manly-Man"
+    },
+
+    "woman": {
+      "first": "Ally",
+      "last": "McBeal"
+    }
+  },
+  "config": {
+    "twitchchannel": "poopypie",
+    "giantbombapikey": "swingswangswong123123",
+    "twitchalerts": "http://www.twitchalerts.com/alert-box/v3/SOMERANDOMHASH"
+  }
+}
