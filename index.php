@@ -84,7 +84,7 @@
 
         var channel, tAlert;
 
-	    $.getJSON("config.json", function(json) {
+	    $.getJSON("example.json", function(json) {
 
             // Set Twitch channel name here
 	        channel = json.config.twitchchannel;
