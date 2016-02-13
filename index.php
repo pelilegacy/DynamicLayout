@@ -82,10 +82,10 @@
 			See: https://stackoverflow.com/questions/8449716/cross-origin-requests-are-only-supported-for-http-but-its-not-cross-domain
 		 */
 
-        var channel, tAlert;
-
-	    $.getJSON("example.json", function(json) {
-
+        var channel, tAlert, jsonFile = 'config.json';
+		
+	    $.getJSON(jsonFile, function(json) {
+			
             // Set Twitch channel name here
 	        channel = json.config.twitchchannel;
             apikey = json.config.giantbombapikey;
@@ -112,7 +112,12 @@
 				}
 	        });
 			return false;
-	    });
+	    })
+		.fail(function() {
+			var msg = jsonFile + ' not found or unreachable. Create readable json-file using example.json';
+			console.debug(msg);
+			alert(msg);
+		});
 
 	    // This function will be repeated to request game name from Twitch API
         function repeat() {
