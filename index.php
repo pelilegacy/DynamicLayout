@@ -134,8 +134,26 @@
 
         // Requesting game data from Giantbomb api with Ajax
         function getGiantbombApiImage(apikey, game) {
-            $.getJSON('http://www.giantbomb.com/api/games/?api_key=' + apikey + '&format=jsonp' + '&field_list=image&filter=name:' + encodeURI(game) + '&json_callback=?', function(json) {
-                elementArtbox.innerHTML = '<img id="pic" src="' + json.results[0].image.super_url + '" />';
+			//
+			// TODO: Request sometimes return incorrect game if there are more games that starts with the same name
+			//
+            $.getJSON('http://www.giantbomb.com/api/games/?api_key=' + apikey + '&format=jsonp' + '&field_list=image&filter=name:' + encodeURI(game) + '&sort=name:asc&json_callback=?', function(json) {
+				if(typeof json.results[0] !== 'undefined') {
+					var url = json.results[0].image.super_url;
+					elementArtbox.style.display = 'inline';
+				}
+				else {
+					url = '';
+					elementArtbox.style.display = 'none';
+				}
+				
+				$.get(url).success(function() {
+					elementArtbox.innerHTML = '<img id="pic" src="' + url + '" />';
+				})
+				
+				.fail(function() {
+					elementArtbox.style.display = 'none';
+				});
             });
         }
 
