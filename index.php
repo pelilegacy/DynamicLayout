@@ -91,8 +91,12 @@
             apikey = json.config.giantbombapikey;
             tAlert = json.config.twitchalerts;
 
+			elementAlertbox = document.getElementById('alertbox');
+			elementArtbox = document.getElementById('artbox');
+			elementGame = document.getElementById('game');
+			
             // Enabling alert
-            document.getElementById('alertbox').innerHTML = '<iframe id="alert" src="' + tAlert + '"></iframe>';
+            elementAlertbox.innerHTML = '<iframe id="alert" src="' + tAlert + '"></iframe>';
 
             // Executing function first since below it executes after timeout. This is here because otherwise it executes before channel name has been set
 	        repeat();
@@ -114,19 +118,19 @@
         function repeat() {
             $.getJSON("https://api.twitch.tv/kraken/channels/" + channel + "?callback=?", function(json) {
                 if(json.game != "") {
-                        if(json.game != document.getElementById('game').innerHTML) {
-                            document.getElementById('game').innerHTML = json.game;
+                        if(json.game != elementGame.innerHTML) {
+                            elementGame.innerHTML = json.game;
                             getGiantbombApiImage(apikey, json.game);
                         }
                     }
-	                else document.getElementById('game').innerHTML = "Pelin nimeä ei voi noutaa";
+	                else elementGame.innerHTML = "Pelin nimeä ei voi noutaa";
             });
         }
 
         // Requesting game data from Giantbomb api with Ajax
         function getGiantbombApiImage(apikey, game) {
             $.getJSON('http://www.giantbomb.com/api/games/?api_key=' + apikey + '&format=jsonp' + '&field_list=image&filter=name:' + encodeURI(game) + '&json_callback=?', function(json) {
-                document.getElementById('artbox').innerHTML = '<img id="pic" src="' + json.results[0].image.super_url + '" />';
+                elementArtbox.innerHTML = '<img id="pic" src="' + json.results[0].image.super_url + '" />';
             });
         }
 
@@ -145,19 +149,18 @@
 			return params;
 	    }
 
-	    // Set scale-value from 0.0 to 1.0. This is here for previewing with browser
+	    // Set scale-value from 0.0 to 1.0. This is here for previewing with browser (Does not work properly with Gecko and Trident)
 	    if (params.scale != "") {
-            $("html").css( "zoom", params.scale);
-            $("html").css( "-moz-transform", "scale(" + params.scale + ")");
-            $("html").css( "-webkit-transform", "scale(" + params.scale + ")");
             $("html").css( "transform", "scale(" + params.scale + ")");
         }
 
 	    // This changes background-image for 4:3 aspect ratio games
 	    if (params.aspect === "retro") {
             $("body").css("background-image", "url(\'pelilegacy-layout-2015-kesa-43.png\')");
-            $("#artbox").css("left", "1501px");
-            $("#artbox").css("width", "399px");
+			
+			var styles = {left : "1501px", width: "399px"};
+			
+            $("#artbox").css(styles);
         }
 
 	    // This sets the function that will be repeated and how often
