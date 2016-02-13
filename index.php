@@ -137,7 +137,7 @@
 			//
 			// TODO: Request sometimes return incorrect game if there are more games that starts with the same name
 			//
-            $.getJSON('http://www.giantbomb.com/api/games/?api_key=' + apikey + '&format=jsonp' + '&field_list=image&filter=name:' + encodeURI(game) + '&sort=name:asc&json_callback=?', function(json) {
+            $.getJSON('http://www.giantbomb.com/api/games/?api_key=' + apikey + '&format=jsonp' + '&field_list=image&filter=name:' + encodeURI(game) + '&json_callback=?', function(json) {
 				if(typeof json.results[0] !== 'undefined') {
 					var url = json.results[0].image.super_url;
 					elementArtbox.style.display = 'inline';
