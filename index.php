@@ -3,7 +3,6 @@
 <head>
 	<title>Layout</title>
 	<meta charset="utf-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <style>
 
 		/* Font for texts */
@@ -71,126 +70,7 @@
 	<div id="name"></div>
     <div id="alertbox"></div>
     <div id="artbox"></div>
-	<script>
-
-	    // Getting URL variables
-		var params = getUrlVars(document.location.search);
-
-	    // Getting player name from URL variable 'p'
-		/** TODO: Store JSON data file in a HTTP(S) location, so you can debug with Chrome Dev Tools locally?
-			Example: http://example.com/layout/data/data.json
-			See: https://stackoverflow.com/questions/8449716/cross-origin-requests-are-only-supported-for-http-but-its-not-cross-domain
-		 */
-
-        var channel, tAlert, jsonFile = 'config.json';
-		
-	    $.getJSON(jsonFile, function(json) {
-			
-            // Set Twitch channel name here
-	        channel = json.config.twitchchannel;
-            apikey = json.config.giantbombapikey;
-            tAlert = json.config.twitchalerts;
-
-			elementAlertbox = document.getElementById('alertbox');
-			elementArtbox = document.getElementById('artbox');
-			elementGame = document.getElementById('game');
-			
-            // Enabling alert
-            elementAlertbox.innerHTML = '<iframe id="alert" src="' + tAlert + '"></iframe>';
-
-            // Executing function first since below it executes after timeout. This is here because otherwise it executes before channel name has been set
-	        repeat();
-
-			$.each(json.players, function(key, value) {
-
-				var name = "";
-
-				if (value.first.trim().toLowerCase() === params.player) {
-					name = value.first + " " + value.last;
-					$("#name").text(name);
-					return false;
-				}
-	        });
-			return false;
-	    })
-		.fail(function() {
-			var msg = jsonFile + ' not found or unreachable. Create readable json-file using example.json';
-			console.debug(msg);
-			alert(msg);
-		});
-
-	    // This function will be repeated to request game name from Twitch API
-        function repeat() {
-            $.getJSON("https://api.twitch.tv/kraken/channels/" + channel + "?callback=?", function(json) {
-                if(json.game != "") {
-                        if(json.game != elementGame.innerHTML) {
-                            elementGame.innerHTML = json.game;
-                            getGiantbombApiImage(apikey, json.game);
-                        }
-                    }
-	                else elementGame.innerHTML = "Pelin nimeä ei voi noutaa";
-            });
-        }
-
-        // Requesting game data from Giantbomb api with Ajax
-        function getGiantbombApiImage(apikey, game) {
-			//
-			// TODO: Request sometimes return incorrect game if there are more games that starts with the same name
-			//
-            $.getJSON('http://www.giantbomb.com/api/games/?api_key=' + apikey + '&format=jsonp' + '&field_list=image&filter=name:' + encodeURI(game) + '&json_callback=?', function(json) {
-				if(typeof json.results[0] !== 'undefined') {
-					var url = json.results[0].image.super_url;
-					elementArtbox.style.display = 'inline';
-				}
-				else {
-					url = '';
-					elementArtbox.style.display = 'none';
-				}
-				
-				$.get(url).success(function() {
-					elementArtbox.innerHTML = '<img id="pic" src="' + url + '" />';
-				})
-				
-				.fail(function() {
-					elementArtbox.style.display = 'none';
-				});
-            });
-        }
-
-	    // Function to read URL variables (?chicken=big etc.)
-	    function getUrlVars(qs) {
-
-			qs = qs.split('+').join(' ');
-			var params = {},
-				tokens,
-				re 	   = /[?&]?([^=]+)=([^&]*)/g;
-
-			while (tokens = re.exec(qs)) {
-				params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
-			}
-
-			return params;
-	    }
-
-	    // Set scale-value from 0.0 to 1.0. This is here for previewing with browser (Does not work properly with Gecko and Trident)
-	    if (params.scale != "") {
-            $("html").css( "transform", "scale(" + params.scale + ")");
-        }
-
-	    // This changes background-image for 4:3 aspect ratio games
-	    if (params.aspect === "retro") {
-            $("body").css("background-image", "url(\'pelilegacy-layout-2015-kesa-43.png\')");
-			
-			var styles = {left : "1501px", width: "399px"};
-			
-            $("#artbox").css(styles);
-        }
-
-	    // This sets the function that will be repeated and how often
-	    var timer = setInterval(function(){
-			repeat();
-		}, 10000);
-
-	</script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<script src="layout.js"></script>
 </body>
 </html>
