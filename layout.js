@@ -106,7 +106,7 @@ jQuery(document).ready(function($) {
 
     // This changes background-image for 4:3 aspect ratio games
     if (params.aspect === "retro") {
-        $("body").css("background-image", "url(\'pelilegacy-layout-2015-kesa-43.png\')");
+        $("body").css("background-image", "url(img/retro.png)");
         $("#artbox").css({ 'left' : '1501px', 'width': '399px' });
     }
 
