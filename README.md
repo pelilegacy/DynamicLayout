@@ -1,11 +1,11 @@
 # Dynamic Layout
 
-Web-based layout for OBS Multiplatform (Browser-plugin required).
+Web-based layout for OBS Multiplatform.
 
 ## Requirements
 Most of the working web servers will do. It's recommended to have the newest Apache or nginx set up and running just in case.
 
-Be sure to download the correct version of [Open Broadcaster Software](https://github.com/jp9000/obs-studio/releases/download/0.13.1-rc1/OBS-MP-0.13.1-rc1-With-Browser-Installer.exe)
+Be sure to download the correct version of [Open Broadcaster Software](https://github.com/jp9000/obs-studio/releases/download/0.13.1-rc1/OBS-MP-0.13.1-rc1-With-Browser-Installer.exe) and the [Browser Plugin](https://obsproject.com/forum/resources/browser-plugin.115/) (bundled with the installer).
 
 [Check here](https://github.com/jp9000/obs-studio/releases) for the latest releases of OBS Multiplatform.
 
