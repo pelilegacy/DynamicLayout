@@ -1,30 +1,39 @@
+/**
+ *  @file layout.js - JavaScript code to handle layout setup dynamically
+ *  @author Joni Nieminen (Arkkis)
+ *  @author Niko Heikkilä (nikoheikkila)
+ *  @license GPL
+ *  @requires jQuery 2.x
+ *  @version 1.0
+ */
 jQuery(document).ready(function($) {
 
-    // Get URL variables
+    /** Get URL variables */
     var params = getUrlVars(document.location.search);
 
-    // Necessary variables
+    /** Other necessary variables */
     var apikey, channel, tAlert,
-    jsonFile        = 'config.json',
-    elementAlertbox = $('#alertbox'),
-    elementArtbox   = $('#artbox'),
-    elementGame     = $('#game');
+    jsonFile        = 'config.json',    // Name of the configuration file
+    elementAlertbox = $('#alertbox'),   // jQuery object for Twitch alert
+    elementArtbox   = $('#artbox'),     // jQuery object for game art
+    elementGame     = $('#game');       // jQuery object for game name
 
     $.getJSON(jsonFile, function(json) {
 
-        // Set Twitch channel name here
-        channel = json.config.twitch_channel;
-        apikey  = json.config.giantbomb_apikey;
-        tAlert  = json.config.twitch_alert;
+        channel = json.config.twitch_channel;       // Twitch channel name
+        apikey  = json.config.giantbomb_apikey;     // GiantBomb API key
+        tAlert  = json.config.twitch_alert;         // TwitchAlert API URL
 
-        // Enabling the alert with iframe
+        /** Enabling the alert by creating an <iframe> element for it */
         elementAlertbox.append('<iframe id="alert" src="' + tAlert + '"></iframe>');
 
-        /** Executing function first since below it executes after timeout.
-            This is here because otherwise it executes before channel name has been set.
-        **/
+        /**
+         *  Executing function first since below it executes after timeout.
+         *  This is here because otherwise it executes before channel name has been set.
+         */
         repeat();
 
+        /** This will update the layout with streamer's name */
         $.each(json.players, function(key, value) {
 
             var name = '';
@@ -37,11 +46,16 @@ jQuery(document).ready(function($) {
         return false;
     })
     .fail(function() {
+        /** For situations where streamer cannot be found. */
         console.error(jsonFile + ' not found or it is unreachable. Create a readable JSON file from example.json.');
         return false;
     });
 
-    // This function will be repeated to request game name from Twitch API
+    /**
+     *  This function will be repeated to request the game name from Twitch API.
+     *  @param none
+     *  @return void
+     */
     function repeat() {
         var baseURL = 'https://api.twitch.tv/kraken/channels/';
         $.getJSON(baseURL + channel + "?callback=?", function(json) {
@@ -49,7 +63,7 @@ jQuery(document).ready(function($) {
             if (json.game !== '') {
                 if (json.game !== elementGame.html()) {
                     elementGame.html(json.game);
-                    getGiantbombApiImage(apikey, json.game);
+                    getGameArt(apikey, json.game);
                 }
             }
             else {
@@ -58,8 +72,13 @@ jQuery(document).ready(function($) {
         });
     }
 
-    // Requesting game data from Giantbomb API with Ajax
-    function getGiantbombApiImage(apikey, game) {
+    /**
+     *  Requesting game data from Giantbomb API
+     *  @param {string} apikey - API Key
+     *  @param {string} game - name of the game to lookup art
+     *  @return void
+     */
+    function getGameArt(apikey, game) {
         // TODO: Request sometimes return incorrect game if there are more games that starts with the same name
 
         var baseURL = 'http://www.giantbomb.com/api/games/?api_key=';
@@ -84,7 +103,11 @@ jQuery(document).ready(function($) {
         });
     }
 
-    // Function to read URL variables (?chicken=big etc.)
+    /**
+     *  Function to read GET variables
+     *  @param {string} qs - query string, usually same as document.location.search
+     *  @return {object} GET parameters as object
+     */
     function getUrlVars(qs) {
 
         qs = qs.split('+').join(' ');
@@ -99,18 +122,22 @@ jQuery(document).ready(function($) {
         return params;
     }
 
-    // Set scale-value from 0.0 to 1.0. This is here for previewing with browser (Does not work properly with Gecko and Trident)
+    /**
+     *  Set scale-value from 0.0 to 1.0.
+     *  This is here for previewing with browser.
+     *  Does not work properly with Gecko and Trident.
+     */
     if (params.scale != "") {
         $("html").css( "transform", "scale(" + params.scale + ")");
     }
 
-    // This changes background-image for 4:3 aspect ratio games
+    /** This changes background-image for 4:3 aspect ratio games */
     if (params.aspect === "retro") {
         $("body").css("background-image", "url(img/retro.png)");
         $("#artbox").css({ 'left' : '1501px', 'width': '399px' });
     }
 
-    // This sets the function that will be repeated and how often
+    /** This sets the function that will be repeated and how often */
     var timer = setInterval(function(){
         repeat();
     }, 10000);
