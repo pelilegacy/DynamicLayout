@@ -105,17 +105,18 @@ jQuery(document).ready(function($) {
 
     /**
      *  Function to read GET variables
+     *  Note: This function is not the most optimum operation and will throw a warning when checking with JSHint.
      *  @param {string} qs - query string, usually same as document.location.search
      *  @return {object} GET parameters as object
      */
+
     function getUrlVars(qs) {
 
         qs = qs.split('+').join(' ');
         var params = {},
             tokens,
             re 	   = /[?&]?([^=]+)=([^&]*)/g;
-
-        while (tokens = re.exec(qs)) {
+        while (tokens = re.exec(qs)) { // jshint ignore:line
             params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
         }
 
@@ -127,7 +128,7 @@ jQuery(document).ready(function($) {
      *  This is here for previewing with browser.
      *  Does not work properly with Gecko and Trident.
      */
-    if (params.scale != "") {
+    if (params.scale !== "") {
         $("html").css( "transform", "scale(" + params.scale + ")");
     }
 
