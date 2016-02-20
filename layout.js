@@ -115,7 +115,7 @@ jQuery(document).ready(function($) {
         qs = qs.split('+').join(' ');
         var params = {},
             tokens,
-            re 	   = /[?&]?([^=]+)=([^&]*)/g;
+            re = /[?&]?([^=]+)=([^&]*)/g;
         while (tokens = re.exec(qs)) { // jshint ignore:line
             params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
         }
