@@ -81,7 +81,7 @@ jQuery(document).ready(function($) {
     function getGameArt(apikey, game) {
         // TODO: Request sometimes return incorrect game if there are more games that starts with the same name
 
-        var baseURL = 'http://www.giantbomb.com/api/games/?api_key=';
+        var baseURL = 'https://www.giantbomb.com/api/games/?api_key=';
 
         $.getJSON(baseURL + apikey + '&format=jsonp' + '&field_list=image&filter=name:' + encodeURI(game) + '&json_callback=?', function(json) {
 
