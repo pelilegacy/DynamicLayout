@@ -1,0 +1,24 @@
+{
+  "name": "dynamiclayout",
+  "version": "1.0.0",
+  "description": "Dynamic Layout for Open Broadcaster Software",
+  "main": "layout.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pelilegacy/DynamicLayout.git"
+  },
+  "keywords": [
+    "layout",
+    "obs",
+    "streaming"
+  ],
+  "author": "Niko Heikkilä, Joni Nieminen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pelilegacy/DynamicLayout/issues"
+  },
+  "homepage": "https://github.com/pelilegacy/DynamicLayout#readme"
+}
