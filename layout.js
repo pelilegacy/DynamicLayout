@@ -12,7 +12,7 @@ jQuery(document).ready(function($) {
     var params = getUrlVars(document.location.search);
 
     /** Other necessary variables */
-    var apikey, channel, tAlert,
+    var apikey, channel, tAlert, clientID,
     jsonFile        = 'config.json',    // Name of the configuration file
     elementAlertbox = $('#alertbox'),   // jQuery object for Twitch alert
     elementArtbox   = $('#artbox'),     // jQuery object for game art
@@ -20,9 +20,10 @@ jQuery(document).ready(function($) {
 
     $.getJSON(jsonFile, function(json) {
 
-        channel = json.config.twitch_channel;       // Twitch channel name
-        apikey  = json.config.giantbomb_apikey;     // GiantBomb API key
-        tAlert  = json.config.twitch_alert;         // TwitchAlert API URL
+        channel     = json.config.twitch_channel;       // Twitch channel name
+        apikey      = json.config.giantbomb_apikey;     // GiantBomb API key
+        tAlert      = json.config.twitch_alert;         // TwitchAlert API URL
+        clientID    = json.config.twitch_client_id;  // Twitch.tv Client-ID
 
         /** Enabling the alert by creating an <iframe> element for it */
         elementAlertbox.append('<iframe id="alert" src="' + tAlert + '"></iframe>');
@@ -58,17 +59,36 @@ jQuery(document).ready(function($) {
      */
     function repeat() {
         var baseURL = 'https://api.twitch.tv/kraken/channels/';
-        $.getJSON(baseURL + channel + "?callback=?", function(json) {
+        // $.getJSON(baseURL + channel + "?callback=?", function(json) {
+        //
+        //     if (json.game !== '') {
+        //         if (json.game !== elementGame.html()) {
+        //             elementGame.html(json.game);
+        //             getGameArt(apikey, json.game);
+        //         }
+        //     }
+        //     else {
+        //         elementGame.html('No game found.');
+        //     }
+        // });
 
-            if (json.game !== '') {
-                if (json.game !== elementGame.html()) {
-                    elementGame.html(json.game);
-                    getGameArt(apikey, json.game);
-                }
+        $.ajax({
+            'type': 'GET',
+            'url': baseURL + channel,
+            'headers': {
+                'Client-ID': clientID
             }
-            else {
-                elementGame.html('No game found.');
-            }
+        })
+        .done(function(data) {
+              if (data.game !== '') {
+                  if (data.game !== elementGame.html()) {
+                      elementGame.html(data.game);
+                      getGameArt(apikey, data.game);
+                  }
+              }
+              else {
+                  elementGame.html('No game found.');
+              }
         });
     }
 
@@ -139,7 +159,7 @@ jQuery(document).ready(function($) {
     }
 
     /** This sets the function that will be repeated and how often */
-    var timer = setInterval(function(){
+    setInterval(function() {
         repeat();
     }, 10000);
 
