@@ -1,13 +1,10 @@
 # Dynamic Layout
-
-Web-based layout for OBS Multiplatform.
+Web-based layout for OBS Studio.
 
 ## Requirements
-Most of the working web servers will do. It's recommended to have the newest Apache or nginx set up and running just in case.
+All you need is a bundled version of [Open Broadcaster Software][obs] and Browser Source.
 
-Be sure to download the correct version of [Open Broadcaster Software](https://github.com/jp9000/obs-studio/releases/download/0.13.1-rc1/OBS-MP-0.13.1-rc1-With-Browser-Installer.exe) and the [Browser Plugin](https://obsproject.com/forum/resources/browser-plugin.115/) (bundled with the installer).
-
-[Check here](https://github.com/jp9000/obs-studio/releases) for the latest releases of OBS Multiplatform.
+[Check here][rel] for the latest releases of OBS Multiplatform.
 
 ## Installation
 After cloning the repository to your server, create configuration file `config.json`.
@@ -17,13 +14,28 @@ After cloning the repository to your server, create configuration file `config.j
 cp example.json config.json
 # Fill in the correct values
 vim config.json
+````
+
+## Development
+Write new code, test it and open a pull request. The easiest way to debug this locally is with [Python 3][python3].
+
+```bash
+cd /path/to/project
+python -m http.server
+# Now point your browser or OBS to http://localhost:8000
 ```
 
-Under the section `config` you need to enter your Twitch channel name, [API key][gb] from GiantBomb and the URL for TwitchAlerts.
+Under the section `config` you need to enter your Twitch channel name and client ID, [API key][gb] from GiantBomb, and the URL for TwitchAlerts.
 
 ## Usage
 1. Add _BrowserSource_ to your OBS Scene
 2. Type in the URL leading to your server (eg. https://example.com/layout)
 3. Set width and height to 1920px and 1080px respectively
 
+## Support
+Ask help from @arkkis or @njh in Slack. For bugs, open an issue.
+
+[obs]: https://github.com/jp9000/obs-studio/releases/download/0.14.2/OBS-Studio-0.14.2-With-Browser-Installer.exe
+[rel]: https://github.com/jp9000/obs-studio/releases
 [gb]: http://www.giantbomb.com/api/
+[python3]: https://www.python.org/downloads/
