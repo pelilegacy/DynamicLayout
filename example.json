@@ -12,7 +12,8 @@
   },
   "config": {
     "twitchchannel": "poopypie",
-    "giantbombapikey": "swingswangswong123123",
-    "twitchalerts": "http://www.twitchalerts.com/alert-box/v3/SOMERANDOMHASH"
+    "twitchalerts": "http://www.twitchalerts.com/alert-box/v3/SOMERANDOMHASH",
+    "twitch_client_id": "xxxxxxxxxxxxxxxxxxxx",
+    "giantbombapikey": "swingswangswong123123"
   }
 }
