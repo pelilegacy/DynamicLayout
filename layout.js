@@ -25,8 +25,11 @@ jQuery(document).ready(function($) {
         tAlert      = json.config.twitch_alert;         // TwitchAlert API URL
         clientID    = json.config.twitch_client_id;  // Twitch.tv Client-ID
 
-        /** Enabling the alert by creating an <iframe> element for it */
-        elementAlertbox.append('<iframe id="alert" src="' + tAlert + '"></iframe>');
+        /** Enabling the alert by creating an <iframe> element for it
+         *  NOTE: This needs to be converted to serve StreamLabs API and is currently disabled
+         *  See the new documentation: https://support.streamlabs.com/hc/en-us/sections/203901777-Guides
+         *  elementAlertbox.append('<iframe id="alert" src="' + tAlert + '"></iframe>');
+         */
 
         /**
          *  Executing function first since below it executes after timeout.
