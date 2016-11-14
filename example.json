@@ -1,19 +1,15 @@
 {
-  "players": {
-    "man": {
-      "first": "Angel",
-      "last": "Manly-Man"
+    "players": {
+        "id": {
+            "first": "Angel",
+            "last": "Manly-Man",
+            "twitter": "Something"
+        }
     },
-
-    "woman": {
-      "first": "Ally",
-      "last": "McBeal"
+        "config": {
+            "twitchchannel": "poopypie",
+            "twitchalerts": "http://www.twitchalerts.com/alert-box/v3/SOMERANDOMHASH",
+            "twitch_client_id": "xxxxxxxxxxxxxxxxxxxx",
+            "giantbombapikey": "swingswangswong123123"
     }
-  },
-  "config": {
-    "twitchchannel": "poopypie",
-    "twitchalerts": "http://www.twitchalerts.com/alert-box/v3/SOMERANDOMHASH",
-    "twitch_client_id": "xxxxxxxxxxxxxxxxxxxx",
-    "giantbombapikey": "swingswangswong123123"
-  }
 }

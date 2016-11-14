@@ -41,9 +41,15 @@ jQuery(document).ready(function($) {
         $.each(json.players, function(key, value) {
 
             var name = '';
+
             if (value.first.trim().toLowerCase() === params.player) {
-                name = value.first + " " + value.last;
-                $("#name").text(name);
+                if (value.hasOwnProperty('twitter') && value.twitter.length !== 0) {
+                    name = "<span class='player-details'>" + value.first + " (<i class='fa fa-twitter'></i> @" + value.twitter + ")</span>";
+                }
+                else {
+                    name = "<span class='player-details'>" + value.first + "</span>";
+                }
+                $("#name").html(name);
                 return false;
             }
         });

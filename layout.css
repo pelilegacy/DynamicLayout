@@ -18,9 +18,9 @@ body {
 }
 
 #name {
-    width: 440px;
-    bottom: 0px;
-    right: 0px;
+    font-size: 2.0em;
+    bottom: 8px;
+    right: 850px;
 }
 
 #game {
@@ -54,4 +54,8 @@ body {
     width: 99%;
     border: 2px solid;
     border-radius: 25px;
+}
+
+.fa-twitter {
+    color: #4099FF;
 }
