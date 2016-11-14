@@ -12,9 +12,9 @@ jQuery(document).ready(function($) {
     var params = getUrlVars(document.location.search);
 
     /** Other necessary variables */
-    var apikey, channel, tAlert, clientID,
+    var apikey, channel, clientID,
     jsonFile        = 'config.json',    // Name of the configuration file
-    elementAlertbox = $('#alertbox'),   // jQuery object for Twitch alert
+    /* elementAlertbox = $('#alertbox'),   jQuery object for Twitch alert */
     elementArtbox   = $('#artbox'),     // jQuery object for game art
     elementGame     = $('#game');       // jQuery object for game name
 
@@ -22,7 +22,7 @@ jQuery(document).ready(function($) {
 
         channel     = json.config.twitch_channel;       // Twitch channel name
         apikey      = json.config.giantbomb_apikey;     // GiantBomb API key
-        tAlert      = json.config.twitch_alert;         // TwitchAlert API URL
+        /* tAlert      = json.config.twitch_alert;          TwitchAlert API URL */
         clientID    = json.config.twitch_client_id;  // Twitch.tv Client-ID
 
         /** Enabling the alert by creating an <iframe> element for it
@@ -119,7 +119,7 @@ jQuery(document).ready(function($) {
             }
 
             $.get(url).success(function() {
-                elementArtbox.append('<img id="pic" src="' + url + '" />');
+                elementArtbox.html('<img id="pic" src="' + url + '" />');
             }).fail(function() {
                 elementArtbox.css({ 'display': 'none' });
             });
