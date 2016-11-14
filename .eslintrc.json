@@ -83,8 +83,10 @@
         "no-bitwise": "error",
         "no-caller": "error",
         "no-catch-shadow": "error",
+        "no-cond-assign": "off",
         "no-confusing-arrow": "error",
         "no-continue": "error",
+        "no-console": "off",
         "no-div-regex": "error",
         "no-duplicate-imports": "error",
         "no-else-return": "error",
@@ -143,7 +145,7 @@
         "no-throw-literal": "error",
         "no-trailing-spaces": "error",
         "no-undef-init": "error",
-        "no-undefined": "error",
+        "no-undef": "error",
         "no-underscore-dangle": "error",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": "error",
@@ -209,5 +211,8 @@
             "error",
             "never"
         ]
+    },
+    "globals": {
+        "jQuery": true
     }
 }
