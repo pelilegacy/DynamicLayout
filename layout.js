@@ -12,18 +12,16 @@ jQuery(document).ready(function($) {
     var params = getUrlVars(document.location.search);
 
     /** Other necessary variables */
-    var apikey, channel, clientID,
+    var channel, clientID, mashapeAPIKey,
     jsonFile        = 'config.json',    // Name of the configuration file
-    /* elementAlertbox = $('#alertbox'),   jQuery object for Twitch alert */
     elementArtbox   = $('#artbox'),     // jQuery object for game art
     elementGame     = $('#game');       // jQuery object for game name
 
     $.getJSON(jsonFile, function(json) {
 
-        channel     = json.config.twitch_channel;       // Twitch channel name
-        apikey      = json.config.giantbomb_apikey;     // GiantBomb API key
-        /* tAlert      = json.config.twitch_alert;          TwitchAlert API URL */
-        clientID    = json.config.twitch_client_id;  // Twitch.tv Client-ID
+        channel       = json.config.twitch_channel;         // Twitch channel name
+        mashapeAPIKey = json.config.igdb.api_keys.testing;  // Mashape (IGDb) API key
+        clientID      = json.config.twitch_client_id;       // Twitch.tv Client-ID
 
         /** Enabling the alert by creating an <iframe> element for it
          *  NOTE: This needs to be converted to serve StreamLabs API and is currently disabled
@@ -68,18 +66,6 @@ jQuery(document).ready(function($) {
      */
     function repeat() {
         var baseURL = 'https://api.twitch.tv/kraken/channels/';
-        // $.getJSON(baseURL + channel + "?callback=?", function(json) {
-        //
-        //     if (json.game !== '') {
-        //         if (json.game !== elementGame.html()) {
-        //             elementGame.html(json.game);
-        //             getGameArt(apikey, json.game);
-        //         }
-        //     }
-        //     else {
-        //         elementGame.html('No game found.');
-        //     }
-        // });
 
         $.ajax({
             'type': 'GET',
@@ -92,7 +78,9 @@ jQuery(document).ready(function($) {
               if (data.game !== '') {
                   if (data.game !== elementGame.html()) {
                       elementGame.html(data.game);
-                      getGameArt(apikey, data.game);
+                      if (params.art === "1") {
+                        getIGDbArt(mashapeAPIKey, 'cover_big', data.game);
+                    }
                   }
               }
               else {
@@ -102,33 +90,47 @@ jQuery(document).ready(function($) {
     }
 
     /**
-     *  Requesting game data from Giantbomb API
-     *  @param {string} apikey - API Key
-     *  @param {string} game - name of the game to lookup art
+     *  getIGDbArt - fetch game art from IGDb
+     *  @param mashapeAPIKey :: String -> API key for Mashape services used by IGDb (see config.json)
+     *  @param size :: String -> size of the cover art
+     *      Accepted values are: "cover_small", "screenshot_med", "cover_big", "logo_med", "screenshot_big", "screenshot_huge", "thumb" and "micro"
+     *  @param game :: String -> the game that is currently being played
      *  @return void
      */
-    function getGameArt(apikey, game) {
-        // TODO: Request sometimes return incorrect game if there are more games that starts with the same name
 
-        var baseURL = 'https://www.giantbomb.com/api/games/?api_key=';
+    function getIGDbArt(mashapeAPIKey, size, game) {
 
-        $.getJSON(baseURL + apikey + '&format=jsonp' + '&field_list=image&filter=name:' + encodeURI(game) + '&json_callback=?', function(json) {
+        var baseURL = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/",
+            fields  = "cover",
+            limit   = "1",
+            offset  = "0",
+            search  = encodeURI(game);
 
-            var url = '';
+        /* Construct the query */
+        var igdbAPICall = baseURL + "?fields=" + fields + "&limit=" + limit + "&offset=" + offset + "&search=" + search;
 
-            if (typeof json.results[0] !== 'undefined') {
-                url = json.results[0].image.super_url;
-                elementArtbox.css({ 'display': 'inline' });
+        $.ajax({
+            "url": igdbAPICall,
+            "method": "GET",
+            "dataType": "json",
+            "headers": {
+                "X-Mashape-Key": mashapeAPIKey
             }
-            else {
-                elementArtbox.css({ 'display': 'none' });
+        }).done(function(data) {
+
+            var hash = "";
+
+            if (typeof data !== undefined && data[0].hasOwnProperty("cover")) {
+                hash = data[0].cover.cloudinary_id;
             }
 
-            $.get(url).success(function() {
-                elementArtbox.html('<img id="pic" src="' + url + '" />');
-            }).fail(function() {
-                elementArtbox.css({ 'display': 'none' });
-            });
+            if (hash.length > 0) {
+                var cloudinary = "https://res.cloudinary.com/igdb/image/upload/t_" + size + "/" + hash + ".jpg";
+                elementArtbox.css({ "display": "inline" }).html('<img id="pic" src="' + cloudinary + '" />');
+            }
+
+        }).fail(function(err) {
+            console.error("Error retrieving the game from IGDb: " + err);
         });
     }
 
