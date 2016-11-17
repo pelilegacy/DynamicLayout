@@ -1,15 +1,19 @@
 {
-    "players": {
-        "id": {
-            "first": "Angel",
-            "last": "Manly-Man",
-            "twitter": "Something"
-        }
-    },
-        "config": {
-            "twitchchannel": "poopypie",
-            "twitchalerts": "http://www.twitchalerts.com/alert-box/v3/SOMERANDOMHASH",
-            "twitch_client_id": "xxxxxxxxxxxxxxxxxxxx",
-            "giantbombapikey": "swingswangswong123123"
+  "players": {
+    "john": {
+      "first": "John",
+      "last": "Doe",
+      "twitter": "JohnDoe"
     }
+  },
+  "config": {
+    "twitch_channel": "My Channel Name",
+    "twitch_client_id": "My Client ID",
+    "igdb": {
+        "api_keys": {
+            "testing": "My IGDB API Key",
+            "production": ""
+        }
+    }
+  }
 }
