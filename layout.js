@@ -6,9 +6,6 @@
  */
 jQuery(document).ready(function($) {
 
-    /** Define environment (production|testing) */
-    var ENV = 'production';
-
     /** Get URL variables */
     var params = getURLParams(document.location.search);
 
@@ -21,6 +18,9 @@ jQuery(document).ready(function($) {
     $.getJSON(jsonFile, function(json) {
         channel       = json.config.twitch_channel;         // Twitch channel name
         clientID      = json.config.twitch_client_id;       // Twitch.tv Client-ID
+
+        /** Define environment (production|testing) */
+        var ENV = json.environment;
 
         /* Mashape (IGDb) API key */
         if (ENV === 'testing') {

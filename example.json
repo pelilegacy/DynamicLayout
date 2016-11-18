@@ -11,6 +11,7 @@
             "twitter": "JaneDoe"
         }
     },
+    "environment": "testing",
     "config": {
         "twitch_channel": "My Channel Name",
         "twitch_client_id": "My Client ID",
