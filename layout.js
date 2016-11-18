@@ -6,6 +6,9 @@
  */
 jQuery(document).ready(function($) {
 
+    /** Define environment (production|testing) */
+    var ENV = 'production';
+
     /** Get URL variables */
     var params = getURLParams(document.location.search);
 
@@ -17,8 +20,19 @@ jQuery(document).ready(function($) {
 
     $.getJSON(jsonFile, function(json) {
         channel       = json.config.twitch_channel;         // Twitch channel name
-        mashapeAPIKey = json.config.igdb.api_keys.testing;  // Mashape (IGDb) API key
         clientID      = json.config.twitch_client_id;       // Twitch.tv Client-ID
+
+        /* Mashape (IGDb) API key */
+        if (ENV === 'testing') {
+            mashapeAPIKey = json.config.igdb.api_keys.testing;
+        }
+        else if (ENV === 'production') {
+            mashapeAPIKey = json.config.igdb.api_keys.production;
+        }
+        else {
+            console.error("No environment specified. Aborting.");
+            return false;
+        }
 
         /** Enabling the alert by creating an <iframe> element for it
          *  NOTE: This needs to be converted to serve StreamLabs API and is currently disabled

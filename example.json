@@ -1,19 +1,24 @@
 {
-  "players": {
-    "john": {
-      "first": "John",
-      "last": "Doe",
-      "twitter": "JohnDoe"
-    }
-  },
-  "config": {
-    "twitch_channel": "My Channel Name",
-    "twitch_client_id": "My Client ID",
-    "igdb": {
-        "api_keys": {
-            "testing": "My IGDB API Key",
-            "production": ""
+    "players": {
+        "john": {
+            "first": "John",
+            "last": "Doe",
+            "twitter": "JohnDoe"
+        },
+        "jane": {
+            "first": "Jane",
+            "last": "Doe",
+            "twitter": "JaneDoe"
+        }
+    },
+    "config": {
+        "twitch_channel": "My Channel Name",
+        "twitch_client_id": "My Client ID",
+        "igdb": {
+            "api_keys": {
+                "testing": "My IGDB API Key 1",
+                "production": "My IGDB API Key 2"
+            }
         }
     }
-  }
 }
