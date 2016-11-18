@@ -46,5 +46,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# NPM log files
+*.log
+
 # Our project files
 config.json

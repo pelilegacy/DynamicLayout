@@ -1,24 +1,21 @@
 /**
  *  @file layout.js - JavaScript code to handle layout setup dynamically
- *  @author Joni Nieminen (Arkkis)
- *  @author Niko Heikkilä (nikoheikkila)
- *  @license GPL
+ *  @license MIT
  *  @requires jQuery 2.x
- *  @version 1.0
+ *  @version 1.1
  */
 jQuery(document).ready(function($) {
 
     /** Get URL variables */
-    var params = getUrlVars(document.location.search);
+    var params = getURLParams(document.location.search);
 
     /** Other necessary variables */
     var channel, clientID, mashapeAPIKey,
-    jsonFile        = 'config.json',    // Name of the configuration file
-    elementArtbox   = $('#artbox'),     // jQuery object for game art
-    elementGame     = $('#game');       // jQuery object for game name
+    jsonFile      = 'config.json',    // Name of the configuration file
+    elementArtbox = $('#artbox'),     // jQuery object for game art
+    elementGame   = $('#game');       // jQuery object for game name
 
     $.getJSON(jsonFile, function(json) {
-
         channel       = json.config.twitch_channel;         // Twitch channel name
         mashapeAPIKey = json.config.igdb.api_keys.testing;  // Mashape (IGDb) API key
         clientID      = json.config.twitch_client_id;       // Twitch.tv Client-ID
@@ -41,7 +38,7 @@ jQuery(document).ready(function($) {
             var name = '';
 
             if (value.first.trim().toLowerCase() === params.player) {
-                if (value.hasOwnProperty('twitter') && value.twitter.length !== 0) {
+                if (value.hasOwnProperty('twitter') && value.twitter.length > 0) {
                     name = "<span class='player-details'>" + value.first + " (<i class='fa fa-twitter'></i> @" + value.twitter + ")</span>";
                 }
                 else {
@@ -54,8 +51,8 @@ jQuery(document).ready(function($) {
         return false;
     })
     .fail(function() {
-        /** For situations where streamer cannot be found. */
-        console.error(jsonFile + ' not found or it is unreachable. Create a readable JSON file from example.json.');
+        /** For situations where configuration file cannot be found. */
+        console.error(jsonFile + ' not found or it is unreachable. Create a readable JSON file from example.json. See README for details.');
         return false;
     });
 
@@ -73,15 +70,12 @@ jQuery(document).ready(function($) {
             'headers': {
                 'Client-ID': clientID
             }
-        })
-        .done(function(data) {
-              if (data.game !== '') {
-                  if (data.game !== elementGame.html()) {
-                      elementGame.html(data.game);
-                      if (params.art === "1") {
+        }).done(function(data) {
+              if (data.game.length > 0 && data.game !== elementGame.html()) {
+                  elementGame.html(data.game);
+                    if (params.art === "1") {
                         getIGDbArt(mashapeAPIKey, 'cover_big', data.game);
                     }
-                  }
               }
               else {
                   elementGame.html('No game found.');
@@ -141,7 +135,7 @@ jQuery(document).ready(function($) {
      *  @return {object} GET parameters as object
      */
 
-    function getUrlVars(qs) {
+    function getURLParams(qs) {
 
         qs = qs.split('+').join(' ');
         var params = {},
