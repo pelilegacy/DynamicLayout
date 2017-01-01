@@ -85,7 +85,7 @@ jQuery(document).ready(function($) {
                 'Client-ID': clientID
             }
         }).done(function(data) {
-              if (data.game.length > 0 && data.game !== elementGame.html()) {
+              if (data.game.length > 0) {
                   elementGame.html(data.game);
                     if (params.art === "1") {
                         getIGDbArt(mashapeAPIKey, 'cover_big', data.game);
