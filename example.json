@@ -11,15 +11,8 @@
             "twitter": "JaneDoe"
         }
     },
-    "environment": "testing",
     "config": {
         "twitch_channel": "My Channel Name",
-        "twitch_client_id": "My Client ID",
-        "igdb": {
-            "api_keys": {
-                "testing": "My IGDB API Key 1",
-                "production": "My IGDB API Key 2"
-            }
-        }
+        "twitch_client_id": "My Client ID"
     }
 }
