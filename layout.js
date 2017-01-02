@@ -10,7 +10,7 @@ jQuery(document).ready(function($) {
     var params = getURLParams(document.location.search);
 
     /** Other necessary variables */
-    var channel, clientID, mashapeAPIKey,
+    var channel, clientID,
     jsonFile      = 'config.json',    // Name of the configuration file
     elementArtbox = $('#artbox'),     // jQuery object for game art
     elementGame   = $('#game');       // jQuery object for game name
@@ -18,21 +18,6 @@ jQuery(document).ready(function($) {
     $.getJSON(jsonFile, function(json) {
         channel       = json.config.twitch_channel;         // Twitch channel name
         clientID      = json.config.twitch_client_id;       // Twitch.tv Client-ID
-
-        /** Define environment (production|testing) */
-        var ENV = json.environment;
-
-        /* Mashape (IGDb) API key */
-        if (ENV === 'testing') {
-            mashapeAPIKey = json.config.igdb.api_keys.testing;
-        }
-        else if (ENV === 'production') {
-            mashapeAPIKey = json.config.igdb.api_keys.production;
-        }
-        else {
-            console.error("No environment specified. Aborting.");
-            return false;
-        }
 
         /** Enabling the alert by creating an <iframe> element for it
          *  NOTE: This needs to be converted to serve StreamLabs API and is currently disabled
@@ -88,7 +73,7 @@ jQuery(document).ready(function($) {
               if (data.game.length > 0) {
                   elementGame.html(data.game);
                     if (params.art === "1") {
-                        getIGDbArt(mashapeAPIKey, 'cover_big', data.game);
+                        getTwitchArt('733', '1080', data.game);
                     }
               }
               else {
@@ -98,47 +83,45 @@ jQuery(document).ready(function($) {
     }
 
     /**
-     *  getIGDbArt - fetch game art from IGDb
-     *  @param mashapeAPIKey :: String -> API key for Mashape services used by IGDb (see config.json)
-     *  @param size :: String -> size of the cover art
-     *      Accepted values are: "cover_small", "screenshot_med", "cover_big", "logo_med", "screenshot_big", "screenshot_huge", "thumb" and "micro"
+     *  getTwitchArt - fetch game art from Twitch - Optimal aspect ratio for fullhd-sized image is 733x1080
+     *  @param width :: String -> width as pixels of the cover art
+	 *  @param height :: String -> height as pixels of the cover art
      *  @param game :: String -> the game that is currently being played
      *  @return void
      */
 
-    function getIGDbArt(mashapeAPIKey, size, game) {
+    function getTwitchArt(width, height, game) {
 
-        var baseURL = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/",
-            fields  = "cover",
-            limit   = "1",
-            offset  = "0",
+        var baseURL = "https://api.twitch.tv/kraken/search/",
             search  = encodeURI(game);
 
         /* Construct the query */
-        var igdbAPICall = baseURL + "?fields=" + fields + "&limit=" + limit + "&offset=" + offset + "&search=" + search;
+        var twitchAPICall = baseURL + 'games?type=suggest&q=' + search;
 
         $.ajax({
-            "url": igdbAPICall,
-            "method": "GET",
-            "dataType": "json",
-            "headers": {
-                "X-Mashape-Key": mashapeAPIKey
-            }
-        }).done(function(data) {
+			'type': 'GET',
+			'url': twitchAPICall,
+			'headers': {
+				'Client-ID': clientID
+			}
+		})
+		.done(function(data) {
 
-            var hash = "";
+            var imgurl = "";
 
-            if (typeof data !== undefined && data[0].hasOwnProperty("cover")) {
-                hash = data[0].cover.cloudinary_id;
-            }
-
-            if (hash.length > 0) {
-                var cloudinary = "https://res.cloudinary.com/igdb/image/upload/t_" + size + "/" + hash + ".jpg";
-                elementArtbox.css({ "display": "inline" }).html('<img id="pic" src="' + cloudinary + '" />');
-            }
+            if(data.games.length != 0) {
+				for(i = 0; i < data.games.length; i++) {
+					if(data.games[i].name == game)
+					{
+						imgurl = data.games[i].box.template.replace("{width}", width).replace("{height}", height);
+					}
+						
+					elementArtbox.css({ "display": "inline" }).html('<img id="pic" src="' + imgurl + '" />');
+				}
+			}
 
         }).fail(function(err) {
-            console.error("Error retrieving the game from IGDb: " + err);
+            console.error("Error retrieving the game from Twitch: " + err);
         });
     }
 
